@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1066,9 +1065,15 @@ function setType(type) {
 // ============ PAYMENT MODE CHANGE ============
 function onPaymentModeChange() {
   const pm = paymentMethods.find(p=>p.name===document.getElementById('paymentMode').value);
-  const showCard = pm && (pm.type==='credit'||pm.type==='debit');
-  document.getElementById('cardSelectorGroup').style.display = showCard ? 'block' : 'none';
-  if (showCard) updateCardDropdown();
+  const showCard = pm && pm.type !== 'cash' && cards.length > 0;
+  const group = document.getElementById('cardSelectorGroup');
+  group.style.display = showCard ? 'block' : 'none';
+  if (showCard) {
+    // Update label based on payment type
+    const isUpiOrWallet = pm && (pm.type==='upi'||pm.type==='wallet'||pm.type==='netbanking');
+    group.querySelector('.form-label').textContent = isUpiOrWallet ? '💳 Paying via which card?' : '💳 Card';
+    updateCardDropdown();
+  }
 }
 
 function updateCardDropdown() {
